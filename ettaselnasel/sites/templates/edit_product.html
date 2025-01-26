@@ -1,0 +1,203 @@
+{% extends "control_board.html" %}
+
+{% block control_board_content %}
+<div class="create-product-container">
+    <h1 class="create-product-title">التعديل على المنتج</h1>
+    {{ ckeditor.load() }}
+
+    <form method="POST" action="{{ url_for('products.edit_product', category_id=category_id, product_id=product_id) }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <!-- حقل العنوان -->
+        <div class="form-group">
+            {{ form.title.label(class="form-label") }}
+            {% if form.title.errors %}
+            {{ form.title(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.title.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.title(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل التصنيف -->
+        <div class="form-group">
+            {{ form.category.label(class="form-label") }}
+            {% if form.category.errors %}
+            {{ form.category(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.category.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.category(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل الـ Slug -->
+        <div class="form-group">
+            {{ form.slug.label(class="form-label") }}
+            {% if form.slug.errors %}
+            {{ form.slug(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.slug.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.slug(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل الصورة -->
+        <div class="form-group">
+            <div class="file-upload-wrapper">
+                {{ form.icon(class="file-upload-input", id="customFile1") }}
+                <label class="file-upload-label" for="customFile1">{{ form.icon.label.text }}</label>
+            </div>
+        </div>
+
+        <!-- حقل المحتوى -->
+        <div class="form-group">
+            {{ form.content.label(class="form-label") }}
+            {% if form.content.errors %}
+            {{ form.content(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.content.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.content(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل السعر -->
+        <div class="form-group">
+            {{ form.price.label(class="form-label") }}
+            {% if form.price.errors %}
+            {{ form.price(class="is-invalid", id="price_input") }}
+            <div class="invalid-feedback">
+                {% for error in form.price.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.price(class="num-input", id="price_input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل الكمية -->
+        <div class="form-group">
+            {{ form.quantity.label(class="form-label") }}
+            {% if form.quantity.errors %}
+            {{ form.quantity(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.quantity.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.quantity(class="num-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل التخفيض -->
+        <div class="form-group">
+            <div class="remember-me">
+                {{ form.is_discount(id="is_discount_checkbox") }}
+                <label for="{{ form.is_discount.id }}">{{ form.is_discount.label.text }}</label>
+            </div>
+        </div>
+
+        <!-- حقل نسبة التخفيض -->
+        <div class="form-group" id="discount_field" style="display: none;">
+            {{ form.discount.label(class="form-label") }}
+            {% if form.discount.errors %}
+            {{ form.discount(class="is-invalid", id="discount_input") }}
+            <div class="invalid-feedback">
+                {% for error in form.discount.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.discount(class="num-input", id="discount_input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل السعر النهائي (يتم إرساله عبر النموذج إلى Flask) -->
+        <div class="form-group" id="final_price_field" style="display: none;">
+            {{ form.final_price.label(class="form-label") }}
+            {{ form.final_price(class="form-input final-price-input", id="final_price_input") }}
+        </div>
+
+        <!-- إضافة حقل مخفي لإرسال final_price مع البيانات إلى Flask -->
+        <input type="hidden" id="final_price_hidden" name="final_price">
+
+        <!-- زر الإرسال -->
+        <div class="form-group form-group-c">
+            {{ form.submit(class="submit-button") }}
+        </div>
+    </form>
+</div>
+<script>
+// التعامل مع إظهار وإخفاء حقول التخفيض والسعر النهائي
+var discountField = document.getElementById("discount_field");
+var finalPriceField = document.getElementById("final_price_field");
+var isDiscountCheckbox = document.getElementById("is_discount_checkbox");
+var discountInput = document.getElementById("discount_input");
+var finalPriceInput = document.getElementById("final_price_input");
+var finalPriceHidden = document.getElementById("final_price_hidden"); 
+var priceInput = document.getElementById("price_input");
+
+// دالة لحساب السعر النهائي
+function calculateFinalPrice() {
+    var originalPrice = parseFloat(priceInput.value) || 0; // الحصول على السعر الأصلي
+    var discount = parseFloat(discountInput.value) || 0; // الحصول على قيمة الخصم
+    if (discount < 0) discount = 0; // ضمان أن الخصم لا يكون أقل من 0%
+    if (discount > 100) discount = 100; // ضمان أن الخصم لا يتجاوز 100%
+    var finalPrice = originalPrice - (originalPrice * (discount / 100)); // حساب السعر النهائي بعد الخصم
+    finalPriceInput.value = finalPrice.toFixed(2); // عرض السعر النهائي في الحقل المرئي
+    finalPriceHidden.value = finalPrice.toFixed(2); // تخزين السعر النهائي في الحقل المخفي لإرساله إلى Flask
+}
+
+// التحقق من حالة is_discount عند التغيير
+isDiscountCheckbox.addEventListener("change", function() {
+    if (this.checked) {
+        discountField.style.display = "block"; // عرض حقل الخصم إذا كانت is_discount محددة
+        finalPriceField.style.display = "block"; // عرض حقل السعر النهائي إذا كانت is_discount محددة
+        calculateFinalPrice(); // حساب السعر النهائي عند تفعيل التخفيض
+    } else {
+        discountField.style.display = "none"; // إخفاء حقل الخصم إذا لم تكن is_discount محددة
+        finalPriceField.style.display = "none"; // إخفاء حقل السعر النهائي إذا لم تكن is_discount محددة
+        finalPriceInput.value = "0"; // تعيين القيمة إلى 0 بدلاً من سلسلة فارغة
+        finalPriceHidden.value = "0"; // تعيين القيمة المخفية إلى 0
+    }
+});
+
+// تحديث السعر النهائي عند إدخال قيم في حقل الخصم
+discountInput.addEventListener("input", function() {
+    calculateFinalPrice(); // حساب السعر النهائي عند تغيير قيمة الخصم
+});
+
+// تحديث السعر النهائي عند إدخال قيم في حقل السعر
+priceInput.addEventListener("input", function() {
+    calculateFinalPrice(); // حساب السعر النهائي عند تغيير قيمة السعر
+});
+
+// التحقق عند تحميل الصفحة إذا كان الحقل محدد بالفعل
+window.onload = function() {
+    if (isDiscountCheckbox.checked) {
+        discountField.style.display = "block"; // عرض حقل الخصم إذا كانت is_discount محددة
+        finalPriceField.style.display = "block"; // عرض حقل السعر النهائي إذا كانت is_discount محددة
+        calculateFinalPrice(); // حساب السعر النهائي عند تحميل الصفحة
+    }
+};
+</script>
+
+
+{% endblock %}

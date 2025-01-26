@@ -1,0 +1,12 @@
+<!-- 403.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="error-section">
+    <div class="container">
+        <h1>403</h1>
+        <p>عذرًا، ليس لديك الصلاحيات للوصول إلى هذه الصفحة.</p>
+        <a href="{{ url_for('main.home') }}" class="cta-button">العودة إلى الصفحة الرئيسية</a>
+    </div>
+</section>
+{% endblock %}

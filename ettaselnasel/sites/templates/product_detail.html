@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="product-detail-container">
+    <div class="product-info-right">
+        <div class="product-image-container">
+            {% if product.is_discount %}
+                <span class="discount-badge">خصم {{ product.discount }}%</span>
+            {% endif %}
+            <div class="product-image-container">
+                <img src="{{ url_for('static', filename='product_icons/' + product.icon) }}" alt="{{ product.title }}" class="product-image">
+            </div>
+            
+        </div>
+        <div class="product-details">
+            <h1 class="product-title">{{ product.title }}</h1>
+            <p class="product-slug">{{ product.slug }}</p>
+            <div class="product-price">
+                {% if product.is_discount %}
+                    <span class="old-price">{{ product.price }} $</span>
+                {% endif %}
+                <span class="current-price">{{ product.final_price }} $</span>
+            </div>
+            <div class="product-category">
+                <strong>الصنف:</strong> {{ category.category }}
+            </div>
+            <div class="product-description">
+                <h2>وصف المنتج</h2>
+                {{ product.content | safe }}
+            </div>
+            <div class="product-meta">
+                <p><strong>الكمية المتوفرة:</strong> {{ product.quantity }}</p>
+            </div>
+            <div class="product-meta">
+                <p><strong>تاريخ النشر:</strong> {{ product.date_posted.strftime('%Y-%m-%d') }}</p>
+            </div>
+            <button class="add-to-cart-btn">أضف إلى السلة</button>
+        </div>
+    </div>
+    
+    <div class="seller-info-left">
+        <h2>معلومات البائع</h2>
+        <img src="{{ url_for('static', filename='profile_pics/' + seller.image_file) }}" alt="{{ seller.username }}" class="seller-image">
+        <p><strong>الاسم:</strong> {{ seller.fullname }}</p>
+        <p><strong>اسم المستخدم:</strong> {{ seller.username }}</p>
+        {% if seller.store_name %}
+            <p><strong>اسم المتجر:</strong> {{ seller.store_name }}</p>
+        {% endif %}
+        {% if seller.store_location %}
+            <p><strong>موقع المتجر:</strong> {{ seller.store_location }}</p>
+        {% endif %}
+        {% if seller.store_phone_number %}
+            <p><strong>رقم هاتف المتجر:</strong> {{ seller.store_phone_number }}</p>
+        {% endif %}
+        {% if seller.product_description %}
+            <div class="seller-description">
+                <h3>نبذة عن المتجر</h3>
+                <p>{{ seller.product_description }}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

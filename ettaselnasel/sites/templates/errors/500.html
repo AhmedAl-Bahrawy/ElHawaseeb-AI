@@ -1,0 +1,12 @@
+<!-- 500.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="error-section">
+    <div class="container">
+        <h1>500</h1>
+        <p>عذرًا، حدث خطأ في الخادم. يرجى المحاولة لاحقًا.</p>
+        <a href="{{ url_for('main.home') }}" class="cta-button">العودة إلى الصفحة الرئيسية</a>
+    </div>
+</section>
+{% endblock %}

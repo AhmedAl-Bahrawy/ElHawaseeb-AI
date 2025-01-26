@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="about-section">
+    <div class="container">
+        <img src="{{url_for('static', filename='logo/team_logo.ico')}}" alt="">
+
+        <h1>من نحن</h1>
+        <p>اتصل نصل هو منصة إلكترونية تهدف إلى تسهيل عمليات التسوق من خلال توفير مجموعة متنوعة من المنتجات بجودة عالية وبأسعار تنافسية. نسعى جاهدين لتقديم تجربة تسوق مميزة وآمنة لجميع عملائنا.</p>
+        
+        <h2>مهمتنا</h2>
+        <p>مهمتنا هي توفير أسهل وأسرع طريقة للحصول على المنتجات التي تmحتاجها، مع ضمان جودة الخدمة وسرعة التوصيل.</p>
+        
+        <h2>رؤيتنا</h2>
+        <p>نسعى لأن نكون الخيار الأول للتسوق الإلكتروني في المنطقة، من خلال تقديم تجربة مستخدم فريدة ومتميزة.</p>
+        
+        <h2>فريقنا</h2>
+        <div class="team">
+            <div class="team-member">
+                <img src="{{url_for('static', filename='team/team_member1.jpg')}}" alt="Team Member 1">
+                <h3>حبيبة محمد</h3>
+                <p>التيم ليد</p>
+            </div>
+            <div class="team-member">
+                <img src="{{url_for('static', filename='team/team_member2.jpg')}}" alt="Team Member 2">
+                <h3>احمد البحراوي</h3>
+                <p>مبرمج الموقع</p>
+            </div>
+            <div class="team-member">
+                <img src="{{url_for('static', filename='team/team_member3.jpg')}}" alt="Team Member 3">
+                <h3>محمود البيطار</h3>
+                <p>مصمم الموقع</p>
+            </div>
+            <div class="team-member">
+                <img src="{{url_for('static', filename='team/team_member4.jpg')}}" alt="Team Member 4">
+                <h3>مروان حكيم</h3>
+                <p>البروبلم سولفر</p>
+            </div>
+            <div class="team-member">
+                <img src="{{url_for('static', filename='team/team_member5.jpg')}}" alt="Team Member 5">
+                <h3>عمر فتوح</h3>
+                <p>التيستر</p>
+            </div>
+            <!-- Add more team members as needed -->
+        </div>
+    </div>
+</section>
+{% endblock content %}

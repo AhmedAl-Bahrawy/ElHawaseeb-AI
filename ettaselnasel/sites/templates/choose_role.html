@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="choose-role-section">
+    <div class="container">
+        <h1>مرحبا بك، اختر دورك</h1>
+        <form action="" method="POST">
+            <div class="role-options">
+                <button type="submit" name="role" value="customer" class="role-button">عميل</button>
+                <button type="submit" name="role" value="seller" class="role-button">تاجر</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock content %}

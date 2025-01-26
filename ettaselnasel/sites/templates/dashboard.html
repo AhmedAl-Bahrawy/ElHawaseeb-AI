@@ -1,0 +1,152 @@
+{% extends "control_board.html" %}
+{% block control_board_content %}
+<div class="dashboard-container">
+    {% if current_user.is_authenticated %}
+        {% if current_user.user_type == 'seller' %}
+        <h1 class="dashboard-title">لوحة التحكم</h1>
+        <div class="dashboard-stats">
+            <!-- الإحصائيات هنا -->
+        </div>
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>إجمالي المبيعات</h3>
+                <p class="stat-value">$10,500</p>
+            </div>
+            <div class="stat-card">
+                <h3>عدد الطلبات</h3>
+                <p class="stat-value">150</p>
+            </div>
+            <div class="stat-card">
+                <h3>عدد المنتجات</h3>
+                <p class="stat-value">75</p>
+            </div>
+            <div class="stat-card">
+                <h3>عدد العملاء</h3>
+                <p class="stat-value">500</p>
+            </div>
+        </div>
+    
+        <div class="dashboard-section">
+            <h2>الطلبات الأخيرة</h2>
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>رقم الطلب</th>
+                        <th>العميل</th>
+                        <th>التاريخ</th>
+                        <th>الحالة</th>
+                        <th>المبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#1001</td>
+                        <td>أحمد محمد</td>
+                        <td>2024-08-05</td>
+                        <td><span class="status-completed">مكتمل</span></td>
+                        <td>$120</td>
+                    </tr>
+                    <tr>
+                        <td>#1002</td>
+                        <td>سارة علي</td>
+                        <td>2024-08-06</td>
+                        <td><span class="status-pending">قيد المعالجة</span></td>
+                        <td>$85</td>
+                    </tr>
+                    <!-- يمكن إضافة المزيد من الصفوف هنا -->
+                </tbody>
+            </table>
+        </div>
+    
+        <div class="dashboard-section">
+            <h2>إدارة المنتجات</h2>
+            <a href="{{ url_for('products.create_product') }}">
+                <button class="add-product-btn">إنشاء منتج جديد</button>
+            </a>
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>اسم المنتج</th>
+                        <th>السعر</th>
+                        <th>الكمية</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.title }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>{{ product.quantity }}</td>
+                        {% if product.quantity and product.quantity > 7 %}
+                        <td><span class="status-instock">متوفر</span></td>
+                        {% else %}
+                        <td><span class="status-lowstock">كمية منخفضة</span></td>
+                        {% endif %}
+                        <td>
+                            <a href="{{ url_for('products.edit_product', product_id=product.id, category_id=product.cat.id) }}"><button class="action-btn edit-btn">تعديل</button></a>
+                            <button type="button" class="action-btn delete-btn"
+                            data-product-id="{{ product.id }}"
+                            data-category-id="{{ product.cat.id }}"
+                            onclick="showDeleteModal(this)">حذف</button>
+    
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <h1 class="dashboard-title">التحول الى تاجر</h1>
+        <center>
+            <a href="{{url_for('users.setup_seller')}}" class="cta-button">التحول الى تاجر</a>
+        </center>
+        {% endif %}
+    {% endif %}
+</div>
+
+<!-- نافذة التأكيد للحذف -->
+<div id="deleteProductModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>هل أنت متأكد من أنك تريد حذف هذا المنتج؟</p>
+        <button id="confirmDeleteBtn" class="confirm-delete-btn">تأكيد الحذف</button>
+    </div>
+</div>
+<script>
+    function showDeleteModal(button) {
+        var modal = document.getElementById("deleteProductModal");
+        var confirmBtn = document.getElementById("confirmDeleteBtn");
+        var span = document.getElementsByClassName("close")[0];
+
+        // Show the modal
+        modal.style.display = "block";
+
+        // Close modal when 'x' is clicked
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        // Close modal when clicking outside of the modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Confirm deletion
+        confirmBtn.onclick = function() {
+            var productId = button.getAttribute("data-product-id");
+            var categoryId = button.getAttribute("data-category-id");
+
+            // Build the delete URL using the actual IDs
+            var deleteUrl = `/product/${categoryId}/${productId}/delete`;
+
+            // Redirect to the delete URL
+            window.location.href = deleteUrl;
+        };
+    }
+
+</script>
+{% endblock %}

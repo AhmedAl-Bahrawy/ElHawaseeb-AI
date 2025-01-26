@@ -1,0 +1,220 @@
+{% extends "control_board.html" %}
+
+{% block control_board_content %}
+<div class="create-product-container">
+    <h1 class="create-product-title">إنشاء منتج جديد</h1>
+    {{ ckeditor.load() }}
+
+    <form method="POST" action="{{ url_for('products.create_product') }}" enctype="multipart/form-data">
+        {{ product_form.hidden_tag() }}
+        <input type="hidden" name="form_name" value="product_form">
+
+        <!-- حقل العنوان -->
+        <div class="form-group">
+            {{ product_form.title.label(class="form-label") }}
+            {% if product_form.title.errors %}
+            {{ product_form.title(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.title.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.title(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل التصنيف -->
+        <div class="form-group">
+            {{ product_form.category.label(class="form-label") }}
+            {% if product_form.category.errors %}
+            {{ product_form.category(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.category.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.category(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- زر إنشاء تصنيف جديد -->
+        <button type="button" id="newCategoryBtn" class="submit-button">إنشاء تصنيف جديد</button>
+
+        <!-- حقل الـ Slug -->
+        <div class="form-group">
+            {{ product_form.slug.label(class="form-label") }}
+            {% if product_form.slug.errors %}
+            {{ product_form.slug(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.slug.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.slug(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل الصورة -->
+        <div class="form-group">
+            <div class="file-upload-wrapper">
+                {{ product_form.icon(class="file-upload-input", id="customFile1") }}
+                <label class="file-upload-label" for="customFile1">{{ product_form.icon.label.text }}</label>
+            </div>
+        </div>
+
+        <!-- حقل المحتوى -->
+        <div class="form-group">
+            {{ product_form.content.label(class="form-label") }}
+            {% if product_form.content.errors %}
+            {{ product_form.content(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.content.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.content(class="form-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل السعر -->
+        <div class="form-group">
+            {{ product_form.price.label(class="form-label") }}
+            {% if product_form.price.errors %}
+            {{ product_form.price(class="is-invalid", id="price_input") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.price.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.price(class="num-input", id="price_input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل الكمية -->
+        <div class="form-group">
+            {{ product_form.quantity.label(class="form-label") }}
+            {% if product_form.quantity.errors %}
+            {{ product_form.quantity(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.quantity.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.quantity(class="num-input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل التخفيض -->
+        <div class="form-group">
+            <div class="remember-me">
+                {{ product_form.is_discount(id="is_discount_checkbox") }}
+                <label for="{{ product_form.is_discount.id }}">{{ product_form.is_discount.label.text }}</label>
+            </div>
+        </div>
+
+        <!-- حقل نسبة التخفيض -->
+        <div class="form-group" id="discount_field" style="display: none;">
+            {{ product_form.discount.label(class="form-label") }}
+            {% if product_form.discount.errors %}
+            {{ product_form.discount(class="is-invalid", id="discount_input") }}
+            <div class="invalid-feedback">
+                {% for error in product_form.discount.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ product_form.discount(class="num-input", id="discount_input") }}
+            {% endif %}
+        </div>
+
+        <!-- حقل السعر النهائي (يتم إرساله عبر النموذج إلى Flask) -->
+        <div class="form-group" id="final_price_field" style="display: none;">
+            {{ product_form.final_price.label(class="form-label") }}
+            {{ product_form.final_price(class="form-input final-price-input", id="final_price_input") }}
+        </div>
+
+        <!-- إضافة حقل مخفي لإرسال final_price مع البيانات إلى Flask -->
+        <input type="hidden" id="final_price_hidden" name="final_price">
+
+        <!-- زر الإرسال -->
+        <div class="form-group form-group-c">
+            {{ product_form.submit(class="submit-button") }}
+        </div>
+    </form>
+</div>
+
+<form method="POST" action="{{ url_for('products.create_product') }}" enctype="multipart/form-data">
+    {{ category_form.hidden_tag() }}
+    <input type="hidden" name="form_name" value="category_form">
+    <div id="newCategoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>إنشاء تصنيف جديد</h2>
+            <div class="form-group">
+                {{ category_form.category.label(class="form-label") }}
+                {{ category_form.category(class="form-input") }}
+                <div class="file-upload-wrapper">
+                {{ category_form.icon(class="file-upload-input2", id="customFile2") }}
+                <label class="file-upload-label" for="customFile2">{{ category_form.icon.label.text }}</label>
+                </div>
+            </div>
+            <div class="form-group form-group-c">
+                {{ category_form.submit(class="submit-button") }}
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- JavaScript للتفاعل مع الحقول -->
+<script>
+   // كود JavaScript للتعامل مع النافذة المنبثقة
+var modal = document.getElementById("newCategoryModal");
+var btn = document.getElementById("newCategoryBtn");
+var span = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+document.getElementById("newCategoryForm").onsubmit = function(e) {
+    e.preventDefault();
+    var newCategory = document.getElementById("newCategory").value;
+    // هنا يمكنك إضافة كود لإرسال التصنيف الجديد إلى الخادم
+    console.log("تم إنشاء تصنيف جديد: " + newCategory);
+    modal.style.display = "none";
+    // يمكنك هنا تحديث قائمة التصنيفات في النموذج الرئيسي
+}
+document.getElementById("newCategoryForm").onsubmit = function(e) {
+    e.preventDefault();
+    var newCategory = document.getElementById("newCategory").value;
+    // إرسال التصنيف الجديد
+    this.submit();
+}
+
+document.querySelector("form[action='{{ url_for('products.create_product') }}']").onsubmit = function(e) {
+    if (document.querySelector("input[name='form_name']").value === "product_form") {
+        // إرسال المنتج الجديد
+        this.submit();
+    }
+}
+</script>
+
+
+{% endblock %}

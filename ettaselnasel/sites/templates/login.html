@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="login-section">
+<div class="container">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <h1>تسجيل الدخول</h1>
+        <div class="form-group">
+            {{ form.email_or_phone.label }}
+            {% if form.email_or_phone.errors %}
+            {{ form.email_or_phone(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.email_or_phone.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.email_or_phone() }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {% if form.password.errors %}
+            {{ form.password(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.password.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.password() }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <div class="remember-me">
+                {{ form.remember() }}
+                <label for="{{ form.remember.id }}">{{ form.remember.label.text }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+        {{ form.submit(class="submit-button disable-button", id="login-submit") }}
+        <p class="signup-link">ليس لديك حساب؟ <a href="{{ url_for('users.signup') }}">إنشاء حساب</a></p>
+        <p class="signup-link"><a href="{{ url_for('users.reset_request') }}">هل نسيت كلمة المرور؟</a></p>
+        </div>
+    </form>
+</div>
+</section>
+{% endblock content %}

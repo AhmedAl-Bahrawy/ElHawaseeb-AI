@@ -1,0 +1,107 @@
+{% extends "control_board.html" %}
+{% block control_board_content %}
+<div class="profile-container">
+    <h1 class="profile-title">الملف الشخصي</h1>
+    
+    <div class="profile-content">
+        <div class="profile-sidebar">
+            <div class="profile-image-container">
+                <img src="{{ image_file }}" alt="صورة الملف الشخصي" class="profile-image" id="profile-image">
+                <div class="image-overlay">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <form method="POST" action="" enctype="multipart/form-data" class="image-upload-form">
+                    {{ form.hidden_tag() }}
+                {{ form.image(class="file-input", id="file-input") }}
+                
+            </div>
+            <h2 class="profile-name">{{ current_user.fullname }}</h2>
+            <p class="profile-username">@{{ current_user.username }}</p>
+        </div>
+        
+        <div class="profile-main">
+            <div class="profile-section">
+                <h3 class="section-title">المعلومات الشخصية</h3>
+                    
+                    <div class="form-group">
+                        {{ form.username.label(class="form-label") }}
+                        {% if form.username.errors %}
+                        {{ form.username(class="is-invalid form-input") }}
+                        <div class="invalid-feedback">
+                        {% for error in form.username.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form.username(class="form-input") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.email_or_phone.label(class="form-label") }}
+                        {% if form.email_or_phone.errors %}
+                        {{ form.email_or_phone(class="is-invalid form-input") }}
+                        <div class="invalid-feedback">
+                        {% for error in form.email_or_phone.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                        </div>
+                        {% else %}
+                        {{ form.email_or_phone(class="form-input") }}
+                        {% endif %}
+                    </div>
+                    {{ form.submit(class="submit-button") }}
+            </div>
+        </form>
+            
+            <div class="profile-section">
+                <h3 class="section-title">تغيير كلمة المرور</h3>
+                <form method="POST" action="">
+                    {% if password_form %}
+                    {{ password_form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ password_form.current_password.label(class="form-label") }}
+                        {{ password_form.current_password(class="form-input") }}
+                    </div>
+                    <div class="form-group">
+                        {{ password_form.new_password.label(class="form-label") }}
+                        {{ password_form.new_password(class="form-input") }}
+                    </div>
+                    <div class="form-group">
+                        {{ password_form.confirm_password.label(class="form-label") }}
+                        {{ password_form.confirm_password(class="form-input") }}
+                    </div>
+                    {{ password_form.submit(class="submit-button") }}
+                    {% endif %}
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileImage = document.getElementById('profile-image');
+        const fileInput = document.getElementById('file-input');
+        const imageOverlay = document.querySelector('.image-overlay');
+    
+        if (profileImage && fileInput && imageOverlay) {
+            imageOverlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileInput.click();
+            });
+    
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profileImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        } else {
+            console.error('One or more elements not found');
+        }
+    });
+    </script>
+    {% endblock %}

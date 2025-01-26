@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="login-section">
+    <div class="container">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <h1>اعادة ضبط كلمة المرور</h1>
+        <div class="form-group">
+            {{ form.email_or_phone.label }}
+            {% if form.email_or_phone.errors %}
+            {{ form.email_or_phone(class="is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.email_or_phone.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.email_or_phone() }}
+            {% endif %}
+        </div>
+        
+        {{ form.submit(class="submit-button disable-button", id="login-submit") }}
+        <p class="signup-link">تذكرت كلمة المرور! <a href="{{ url_for('users.login') }}">تسجيل الدخول</a></p>
+    </form>
+</div>
+</section>
+{% endblock content %}

@@ -1,0 +1,35 @@
+<!-- contact.html -->
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="contact-section">
+    <div class="container">
+        <center>
+            <img src="{{url_for('static', filename='logo/support_logo.ico')}}" alt="">
+        </center>
+        <h1>تواصل معنا</h1>
+        {{ ckeditor.load() }}
+        {{ ckeditor.config(name='content')}}
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control", placeholder="أدخل اسمك الكامل") }}
+            </div>
+            <div class="form-group">
+                {{ form.email_or_phone.label(class="form-label") }}
+                {{ form.email_or_phone(class="form-control", placeholder="أدخل بريدك الإلكتروني") }}
+            </div>
+            <div class="form-group">
+                {{ form.subject.label(class="form-label") }}
+                {{ form.subject(class="form-control", placeholder="أدخل موضوع الرسالة") }}
+            </div>
+            <div class="form-group">
+                {{ form.message.label(class="form-label") }}
+                {{ form.message(class="form-control", placeholder="أدخل رسالتك", rows=6) }}
+            </div>
+            <button type="submit" class="submit-button disable-button">إرسال</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

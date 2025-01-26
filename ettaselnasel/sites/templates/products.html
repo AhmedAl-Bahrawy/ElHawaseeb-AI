@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="products-section">
+    <h2>عروض اليوم</h2>
+    <div class="product-list">
+        {% for product in discount_products %}
+<a href="{{url_for('products.product_detail', category_id=product.cat.id, product_id=product.id)}}" class="link no-underline">
+<div class="product-card ">
+    {% if product.is_discount %}
+            <!-- عرض نسبة الخصم على البطاقة -->
+            <div class="discount-badge">{{ product.discount }}%</div>
+    {% endif %}
+    <img src="{{url_for('static', filename='product_icons/'+product.icon)}}" alt="Product 1">
+    <h3>{{product.title}}</h3>
+    <p>{{product.slug}}</p>
+    <p class="price">
+        {% if product.is_discount %}
+            <span class="old-price">${{ product.price }}</span> <!-- السعر الأصلي -->
+        {% endif %}
+        ${{product.final_price}} <!-- السعر بعد الخصم -->
+    </p>
+    <div class="author-info">
+        <div class="author-img-container">
+            <img class="author-img" src="{{url_for('static', filename='profile_pics/'+product.author.image_file)}}" alt="">
+        </div>
+        <div class="author-text">
+            <span>By: <a href="#" class="">{{product.author.username}}</a></span>
+        </div>
+    </div>
+    <button class="add-to-cart">أضف إلى السلة</button>
+</div>
+</a>
+{% endfor %}
+    </div>
+</section>
+
+<section class="hero-section">
+    <h1>--------------------------</h1>
+</section>
+
+<section class="products-section">
+        <h2>منتجاتنا</h2>
+        <div class="product-list">
+            {% for product in products %}
+    <a href="{{url_for('products.product_detail', category_id=product.cat.id, product_id=product.id)}}" class="link no-underline">
+    <div class="product-card ">
+        {% if product.is_discount %}
+            <!-- عرض نسبة الخصم على البطاقة -->
+            <div class="discount-badge">{{ product.discount }}%</div>
+        {% endif %}
+        <img src="{{url_for('static', filename='product_icons/'+product.icon)}}" alt="Product 1">
+        <h3>{{product.title}}</h3>
+        <p>{{product.slug}}</p>
+        <p class="price">
+            {% if product.is_discount %}
+                <span class="old-price">${{ product.price }}</span> <!-- السعر الأصلي -->
+            {% endif %}
+            ${{product.final_price}} <!-- السعر بعد الخصم -->
+        </p>
+        <div class="author-info">
+            <div class="author-img-container">
+                <img class="author-img" src="{{url_for('static', filename='profile_pics/'+product.author.image_file)}}" alt="">
+            </div>
+            <div class="author-text">
+                <span>By: <a href="#" class="">{{product.author.username}}</a></span>
+            </div>
+        </div>
+        <button class="add-to-cart">أضف إلى السلة</button>
+    </div>
+</a>
+{% endfor %}
+        </div>
+</section>
+{% endblock %}

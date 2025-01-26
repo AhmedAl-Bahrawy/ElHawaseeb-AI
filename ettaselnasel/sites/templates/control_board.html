@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="control-board-container">
+    <h1 class="control-board-title">لوحة القيادة</h1>
+
+    <div class="control-board-tabs">
+        <a href="{{ url_for('products.create_product') }}" class="tab-link {% if active_tab == 'create_product' %}active{% endif %}">انشاء منتج</a>
+        <a href="{{ url_for('users.dashboard') }}" class="tab-link {% if active_tab == 'dashboard' %}active{% endif %}">لوحة التحكم</a>
+        <a href="{{ url_for('users.profile') }}" class="tab-link {% if active_tab == 'profile' %}active{% endif %}">الملف الشخصي</a>
+    </div>
+
+    <div class="control-board-content">
+        {% block control_board_content %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}

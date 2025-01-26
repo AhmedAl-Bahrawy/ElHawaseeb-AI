@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="signup-section">
+    <div class="container">
+        <h1>إنشاء حساب</h1>
+        <form action="" method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.fullname.label }}
+                {% if form.fullname.errors %}
+                {{ form.fullname(class="is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.fullname.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.fullname() }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.email_or_phone.label }}
+                {% if form.email_or_phone.errors %}
+                {{ form.email_or_phone(class="is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.email_or_phone.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.email_or_phone() }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {% if form.username.errors %}
+                {{ form.username(class="is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.username.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.username() }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.password.label }}
+                {% if form.password.errors %}
+                {{ form.password(class="is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.password.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.password() }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.confirmpassword.label }}
+                {% if form.confirmpassword.errors %}
+                {{ form.confirmpassword(class="is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.confirmpassword.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.confirmpassword() }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.submit(class="submit-button disable-button", id="signup-submit") }}
+                <p class="login-link">لديك حساب بالفعل؟ <a href="{{ url_for('users.login') }}">تسجيل الدخول</a></p>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock content %}
